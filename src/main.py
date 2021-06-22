@@ -6,7 +6,7 @@ from DataPostProcessor import *
 def main():
     parser = argparse.ArgumentParser(description='Data Processor')
     parser.add_argument('--processing_type', action='store', type=str, default='GeneratingDEM',
-                        help='Street map database')
+                        help='Street map database, GeneratingDEM|CalMeanStd|RemoveReplica|Check')
     parser.add_argument('--street_map_database', action='store', type=str, default='../references/StreetMaps/',
                         help='Street map database')
     parser.add_argument('--tmp_export_path', action='store', type=str, default='../export/',
@@ -42,6 +42,8 @@ def main():
 
     if arg.processing_type == 'GeneratingDEM':
         data_processor.process_to_img()
+    elif arg.processing_type == 'CalMeanStd':
+        data_post_processor.calculate_mean_std()
     elif arg.processing_type == 'RemoveReplica':
         data_post_processor.open_index()
         data_post_processor.remove_replica(arg.remove_img_same_to)

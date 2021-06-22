@@ -57,6 +57,40 @@ class DataPostProcessor:
         self.index_df.drop(row_indexs, inplace=True)
         return
 
+    def calculate_mean_std(self):
+        mean, std = self.calculate_mean_std_in_dir(self.post_processing_DEM_path)
+        print(f'data of {self.post_processing_DEM_path}: mean is {mean}; std is {std}')
+
+        mean, std = self.calculate_mean_std_in_dir(self.post_processing_street_path)
+        print(f'data of {self.post_processing_street_path}: mean is {mean}; std is {std}')
+
+        mean, std = self.calculate_mean_std_in_dir(self.post_processing_sketch_path)
+        print(f'data of {self.post_processing_sketch_path}: mean is {mean}; std is {std}')
+        return
+
+    def calculate_mean_std_in_dir(self, dir_path):
+        img_names = os.listdir(dir_path)
+        img_means = []
+        img_stds = []
+        for img_name in img_names:
+            img_path = os.path.join(dir_path, img_name)
+            img = cv2.imread(img_path)
+            img_mean = np.mean(img, axis=(0, 1))
+            img_means.append(img_mean)
+        mean = np.mean(img_means, axis=0)
+
+        for img_name in img_names:
+            img_path = os.path.join(dir_path, img_name)
+            img = cv2.imread(img_path)
+            pixel_num = img.shape[0] * img.shape[1]
+            img_std_sum = np.sum(np.power(img - mean, 2), axis=(0, 1)) / pixel_num
+            img_stds.append(img_std_sum)
+        std = np.sqrt(np.mean(img_stds, axis=0))
+
+        mean = mean / 255
+        std = std / 255
+        return mean, std
+
     def check(self):
         for index, row in self.index_df.iterrows():
             name = row['StreetMaps']

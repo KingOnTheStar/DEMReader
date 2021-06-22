@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
+import math
 
 from common import utils
 
@@ -29,13 +30,14 @@ class MapDataset:
         print("Min is " + str(graph_min))
         graph_delta = graph_max - graph_min
 
+        img_unit = 255.0
         if normal_delta:
-            if graph_delta < 255:
-                graph_delta = 255.0
+            hi_gap_idx = math.ceil(graph_delta / img_unit)
+            if hi_gap_idx == 0:  # hi_gap_idx >= 1
+                hi_gap_idx = 1
+            graph_delta = hi_gap_idx * img_unit
 
-        if graph_delta <= 0:
-            graph_delta = 1e-12
-        img_graph = 255.0 * (graph - graph_min) / graph_delta
+        img_graph = img_unit * (graph - graph_min) / graph_delta
         img_data = {'img_graph': img_graph, 'graph_max': graph_max, 'graph_min': graph_min}
         return img_data
 
