@@ -23,7 +23,7 @@ def main():
     parser.add_argument('--remove_img_same_to', action='store', type=str, default='N30.300E115.240N30.310E115.250.png',
                         help='Activated when processing_type == RemoveReplica')
     parser.add_argument('--advance_processing_type', action='store', type=str, default='GenGradImgFormat',
-                        help='Activated when processing_type == AdvanceDataProcessing, GenGradImgFormat|')
+                        help='Activated when processing_type == AdvanceDataProcessing, GenGradImgFormat|CalGradMeanStd')
     parser.add_argument('--input_path', action='store', type=str, default='../output/DEMMaps/',
                         help='Input path for advance data processing')
     parser.add_argument('--output_path', action='store', type=str, default='../output/AdvanceDataProcessing/',
@@ -60,6 +60,8 @@ def main():
     elif arg.processing_type == 'AdvanceDataProcessing':
         if arg.advance_processing_type == 'GenGradImgFormat':
             DataAdvanceProcessor.gen_grad_img_format(arg.input_path, arg.output_path)
+        if arg.advance_processing_type == 'CalGradMeanStd':
+            DataAdvanceProcessor.cal_grad_mean_std(arg.input_path)
     else:
         pass
 
